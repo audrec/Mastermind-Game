@@ -1,4 +1,4 @@
-package com.masterMindGame;
+package com.masterMindGame.gameGenerators;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -1,4 +1,4 @@
-package com.masterMindGame;
+package com.masterMindGame.gameGenerators;
 
 import com.masterMindGame.gameLevels.EasyGame;
 import com.masterMindGame.gameLevels.HardGame;
@@ -34,12 +34,6 @@ public class GameLauncher {
      * Get level input from the chosen game difficulty.
      */
     public static void getLevelParam() {
-        Set<String> levelSet = new HashSet<>();
-        levelSet.add("easy");
-        levelSet.add("medium");
-        levelSet.add("hard");
-        List<Integer> levelParam = new ArrayList<>();
-
         System.out.println("---------- Start the Mastermind game! ----------");
         while (true) {
             System.out.println("Please Enter Game Difficulty Level(easy/medium/hard): ");
@@ -105,7 +99,7 @@ public class GameLauncher {
         // Keep storing input record for tracking
         List<String> record = new ArrayList<>();
 
-        while (lives >= 0) {
+        while (lives > 0) {
             System.out.println("Attempts Left: " + lives);
             System.out.println();
             boolean validLengthInput = false;
@@ -124,7 +118,6 @@ public class GameLauncher {
                 if (input.length() == totalNum) {
                     attempt++;
                     validLengthInput = true;
-                    boolean isGuessCorrect = false;
                     int correctNum = 0;
                     int correctIndex = 0;
 

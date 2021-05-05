@@ -7,7 +7,12 @@ import com.masterMindGame.gameLevels.MediumGame;
 import java.util.*;
 
 /**
- *
+ * Author: Yen-Chi (Audrey) Chen
+ * Description:
+ * This is the main entry file for the Mastermind game. The game will
+ * generates different numbers combinations based on the level user chose.
+ * The user needs to enter the correct numbers combinations within the default
+ * limitation on attempts.
  */
 
 public class GameLauncher {

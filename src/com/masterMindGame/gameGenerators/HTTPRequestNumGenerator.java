@@ -1,11 +1,11 @@
-package com.company;
+package com.masterMindGame;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.masterMindGame.exceptionHandlers.InvalidMethodCallException;
+import com.masterMindGame.exceptionHandlers.InvalidResponseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,13 +15,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class RandomNumbers {
+public class HTTPRequestNumGenerator {
     private String apiKey;
+
     private JsonArray data;
     private JsonElement result;
     private int totalNum = 0;
 
-    public RandomNumbers(String apiKey) {
+    public HTTPRequestNumGenerator(String apiKey) {
         this.apiKey = "\"" + apiKey + "\"";
     }
 

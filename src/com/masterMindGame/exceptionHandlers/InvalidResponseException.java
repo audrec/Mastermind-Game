@@ -1,4 +1,4 @@
-package com.company;
+package com.masterMindGame.exceptionHandlers;
 
 public class InvalidResponseException extends Exception{
     public InvalidResponseException(String message, Throwable cause) {

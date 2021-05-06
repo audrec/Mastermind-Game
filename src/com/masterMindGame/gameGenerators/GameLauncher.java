@@ -76,7 +76,7 @@ public class GameLauncher {
      */
     private static void buildGame() {
         // Generate random numbers from the parameter values we got.
-        randomNumFactory numFactory = new randomNumFactory();
+        RandomNumFactory numFactory = new RandomNumFactory();
         int[] targetNumsArray = numFactory.generateRandomNum(totalNum, min, max);
 
         TargetNumsStorer numsStorer = new TargetNumsStorer();

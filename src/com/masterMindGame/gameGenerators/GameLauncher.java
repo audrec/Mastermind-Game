@@ -96,7 +96,7 @@ public class GameLauncher {
      * Game Time!
      */
     private static void playGame(char[] targetCharArray) {
-        // For storing user's current numbers guessed
+        // For storing user's current correct numbers guessed
         char[] curGuess = new char[targetCharArray.length];
         // For storing user's current correct numbers input
         char[] curCorrect = new char[targetCharArray.length];
@@ -128,21 +128,19 @@ public class GameLauncher {
                     int correctIndex = 0;
 
                     for (int i = 0; i < totalNum; i++) {
-                        curGuess[i] = input.charAt(i);
+                        if (input.charAt(i) == targetCharArray[i]) {
+                            correctIndex++;
+                            curCorrect[i] = targetCharArray[i];
+                        }
                         if (targetNumsMap.containsKey(input.charAt(i)) && targetNumsMap.get(input.charAt(i)) != 0) {
                             targetNumsMap.put(input.charAt(i), targetNumsMap.get(input.charAt(i)) - 1);
-                            if (input.charAt(i) == targetCharArray[i]) {
-                                correctIndex++;
-                                correctNum++;
-                                curCorrect[i] = targetCharArray[i];
-                            } else {
-                                correctNum++;
-                            }
+                            correctNum++;
+                            curGuess[i] = input.charAt(i);
                         }
                     }
                     // Recover the counts of each target number.
                     for (int i = 0; i < curGuess.length; i++) {
-                        if (targetNumsMap.containsKey(curGuess[i])) {
+                        if (curGuess[i] != '\0') {
                             targetNumsMap.put(curGuess[i], targetNumsMap.get(curGuess[i]) + 1);
                         }
                     }

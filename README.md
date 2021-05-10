@@ -100,3 +100,5 @@ boolean isSecrectCodeEntered(String input, char[] targetCharArray){
         return false;
     }
 ```
+
+!["When secret code is entered, user wins the game directly."](https://github.com/audrec/Mastermind-Game/blob/31fe247ab8ce1814f45ed2cfc055d2585d6f9424/ProgramScreenshots/godMode.png)

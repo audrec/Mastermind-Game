@@ -146,8 +146,12 @@ public class GameLauncher {
                     // If either number of the target was missed, game is not finished yet
                     isGameFinished = utils.checkIfGameFinished(curCorrect);
 
-                    if (!isGameFinished) {
-                        System.out.println("Wrong guess! Try Again!");
+                    if (!isGameFinished && lives == 0) {
+                        System.out.println("Wrong guess!");
+                        System.out.println("You lost! The word was: " + new String(targetCharArray));
+                        break;
+                    } else if (!isGameFinished) {
+                        System.out.println("Wrong guess! Try again!");
                     }
 
                 } else {
@@ -157,8 +161,6 @@ public class GameLauncher {
             if (isGameFinished) {
                 System.out.println("You won!");
                 break;
-            } else if (lives == 0) {
-                System.out.println("You lost! The word was: " + new String(targetCharArray));
             }
         }
         System.exit(0);

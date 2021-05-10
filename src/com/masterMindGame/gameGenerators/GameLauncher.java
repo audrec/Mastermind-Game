@@ -22,6 +22,7 @@ public class GameLauncher {
     private static int lives;
     private static char[] targetCharArray;
     private static Map<Character, Integer> targetNumsMap = new HashMap<>();
+    static GameLauncherUtils utils = new GameLauncherUtils();
 
     /**
    * We have 3 steps to finish the whole processing.
@@ -80,16 +81,12 @@ public class GameLauncher {
         RandomNumFactory numFactory = new RandomNumFactory();
         int[] targetNumsArray = numFactory.generateRandomNum(totalNum, min, max);
 
-        TargetNumsStorer numsStorer = new TargetNumsStorer();
-        targetCharArray = numsStorer.intArrayToCharArray(targetNumsArray);
+        // Get the char array format of the target integer array
+        targetCharArray = utils.intArrayToCharArray(targetNumsArray);
         // Put all elements in targetCharArray to a hashmap
-        targetNumsMap = numsStorer.buildTargetMap(targetCharArray);
-
+        targetNumsMap = utils.buildTargetMap(targetCharArray);
         // Print instruction based on the level user chosen
-        System.out.println("Instruction: ");
-        System.out.println("Enter " +  totalNum + " numbers from " + min +" to " + max + " , try to guess " +
-                "the correct combination within " + lives + " attempts.");
-        System.out.println("Note: duplicate numbers are also applied.");
+        utils.printInstruction(totalNum, min, max, lives);
     }
 
     /**
@@ -116,56 +113,35 @@ public class GameLauncher {
                 Scanner sc = new Scanner(System.in);
                 String input = sc.nextLine();
 
-                // Initialize and fill the current input with '.'
-                for (int i = 0; i < targetCharArray.length; i++) {
-                    curCorrect[i] = '.';
-                }
+                // Initialize current correct array with '.' at each index
+                curCorrect = utils.initialCurCorrect(targetCharArray, curCorrect);
 
+                // Only when the input's length equals to the target's length will we validate the combinations
                 if (input.length() == totalNum) {
+                    // If input were not all digits, re-prompt for user input
+                    if (!utils.getIfInputIsDigit(input)) {
+                        System.out.println("Please only enter digits numbers. Try again.");
+                        continue;
+                    }
                     attempt++;
+                    lives--;
                     validLengthInput = true;
                     int correctNum = 0;
                     int correctIndex = 0;
+                    // Check the numbers of correct numbers and correct index guessed for current input
+                    int[] correctResult = utils.checkValidInput(totalNum, targetCharArray, targetNumsMap, input,
+                            correctNum, correctIndex, curCorrect, curGuess);
+                    // Show current guess results
+                    utils.printCurRecords(correctResult, totalNum);
+                    // Show all number combinations guessed so far
+                    utils.printAllGuess(curCorrect, record, attempt);
 
-                    for (int i = 0; i < totalNum; i++) {
-                        if (input.charAt(i) == targetCharArray[i]) {
-                            correctIndex++;
-                            curCorrect[i] = targetCharArray[i];
-                        }
-                        if (targetNumsMap.containsKey(input.charAt(i)) && targetNumsMap.get(input.charAt(i)) != 0) {
-                            targetNumsMap.put(input.charAt(i), targetNumsMap.get(input.charAt(i)) - 1);
-                            correctNum++;
-                            curGuess[i] = input.charAt(i);
-                        }
+                    // If either number of the target was missed, game is not finished yet
+                    isGameFinished = utils.checkIfGameFinished(curCorrect);
+
+                    if (!isGameFinished) {
+                        System.out.println("Wrong guess! Try Again!");
                     }
-                    // Recover the counts of each target number.
-                    for (int i = 0; i < curGuess.length; i++) {
-                        if (curGuess[i] != '\0') {
-                            targetNumsMap.put(curGuess[i], targetNumsMap.get(curGuess[i]) + 1);
-                        }
-                    }
-                    System.out.println("Wrong guess!");
-                    lives--;
-
-                    System.out.println("Correct Number Guessed: " + correctNum + " /" + totalNum);
-                    System.out.println("Correct Position Guessed: " + correctIndex + " /" + totalNum);
-
-                    System.out.println();
-                    System.out.println("Current Guess: ");
-
-                    for (char c : curCorrect) {
-                        if (c == '.') {
-                            isGameFinished = false;
-                        }
-                    }
-
-                    record.add(attempt + " : " + new String(curCorrect));
-                    for (String s : record) {
-                        System.out.println(s);
-                    }
-
-                    System.out.println();
-                    System.out.println("-----------");
 
                 } else {
                     System.out.println("Please enter " + totalNum + " numbers. Try Again.");
@@ -178,5 +154,6 @@ public class GameLauncher {
                 System.out.println("You lost! The word was: " + new String(targetCharArray));
             }
         }
+        System.exit(0);
     }
 }

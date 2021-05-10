@@ -12,14 +12,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HTTPRequestNumGenerator {
-    private String apiKey;
+    private final String apiKey;
 
     private JsonArray data;
-    private JsonElement result;
     private int totalNum = 0;
 
     public HTTPRequestNumGenerator(String apiKey) {
@@ -37,7 +35,7 @@ public class HTTPRequestNumGenerator {
 
         HttpURLConnection connection = null;
         // Initialize a bufferReader to read texts from a character-input stream
-        BufferedReader reader = null;
+        BufferedReader reader;
         // To read every line from the endpoint
         String line;
 
@@ -80,11 +78,10 @@ public class HTTPRequestNumGenerator {
                 }
             }
             // Parse the response into JSON format
-            JsonParser parser = new JsonParser();
-            JsonElement root = parser.parse(responseContent.toString());
+            JsonObject root = JsonParser.parseString(responseContent.toString()).getAsJsonObject();
 
             // Extract result from root
-            result = root.getAsJsonObject().get("result");
+            JsonElement result = root.getAsJsonObject().get("result");
             if (result == null) {
                 JsonElement error = root.getAsJsonObject().get("error");
                 JsonElement message = error.getAsJsonObject().get("message");
@@ -96,12 +93,11 @@ public class HTTPRequestNumGenerator {
             JsonObject randomNums = (JsonObject) random;
             data = randomNums.get("data").getAsJsonArray();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             // Close the connection
+            assert connection != null;
             connection.disconnect();
         }
 

@@ -113,8 +113,15 @@ public class GameLauncher {
                 Scanner sc = new Scanner(System.in);
                 String input = sc.nextLine();
 
+                // If the user types in the secret code, indicate the answer and exit the program
+                if (utils.isSecrectCodeEntered(input, targetCharArray)) {
+                    String answer = new String(targetCharArray);
+                    System.out.println("Congratulations! The answer is: " + answer);
+                    break;
+                }
+
                 // Initialize current correct array with '.' at each index
-                curCorrect = utils.initialCurCorrect(targetCharArray, curCorrect);
+                curCorrect = utils.initialCurCorrectArray(targetCharArray, curCorrect);
 
                 // Only when the input's length equals to the target's length will we validate the combinations
                 if (input.length() == totalNum) {

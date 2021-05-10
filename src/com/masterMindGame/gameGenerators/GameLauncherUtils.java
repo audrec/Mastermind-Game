@@ -23,6 +23,14 @@ class GameLauncherUtils {
         return map;
     }
 
+    boolean isSecrectCodeEntered(String input, char[] targetCharArray){
+        // If user enters the secret code, switch the god mode on and win the game directly
+        if (input.equals("iamgod")) {
+            return true;
+        }
+        return false;
+    }
+
     void printInstruction(int totalNum, int min, int max, int lives) {
         System.out.println("Instruction: ");
         System.out.println("Enter " +  totalNum + " numbers from " + min +" to " + max + " , try to guess " +
@@ -30,7 +38,7 @@ class GameLauncherUtils {
         System.out.println("Note: duplicate numbers are also applied.");
     }
 
-    char[] initialCurCorrect(char[] target, char[] curCorrect) {
+    char[] initialCurCorrectArray(char[] target, char[] curCorrect) {
         // Initialize and fill the current input with '.'
         for (int i = 0; i < target.length; i++) {
             curCorrect[i] = '.';

@@ -53,6 +53,7 @@ If the target numbers was successfully guessed by the user, the program will exi
 
 If the target numbers was not guessed by the user, and all attempts were used, program exit with answer showing up and 
 indicate that user had lost.
+
 !["When the user lost the game"](https://github.com/audrec/Mastermind-Game/blob/31fe247ab8ce1814f45ed2cfc055d2585d6f9424/ProgramScreenshots/Lost.png)
 
 Invalid input such as alphabets, incorrect length input, digits with alphabets will be handled by error input check.

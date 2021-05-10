@@ -41,7 +41,7 @@ for each URL parameter is as follows:
 Invalid input for level choosing will show error message, and ask the user to choose the level again.
 !["Error message when invalid level input entered"](https://github.com/audrec/Mastermind-Game/blob/31fe247ab8ce1814f45ed2cfc055d2585d6f9424/ProgramScreenshots/ErrorLevelInput.png)
 
-# User Input
+# Verify and Collect User Input
 If the input fits the target number's length, the program will check and give the result of both total correct numbers 
 and correct positions guessed. The history of each prompt will be record in a list and display as a reference for the user.
 Attempts will be deducted by one if the input was not the target numbers combinations. 

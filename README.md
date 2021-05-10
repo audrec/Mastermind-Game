@@ -21,7 +21,7 @@ attempts.
 
 - [Game Levels](#game-levels)
 
-- [Verify and Collect User Input](#User-Input)
+- [Verify and Collect User Input](#verify-and-collect-user-input)
 
 - [Code Structure](#code-structure)
 

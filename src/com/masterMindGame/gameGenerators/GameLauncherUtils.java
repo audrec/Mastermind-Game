@@ -3,8 +3,28 @@ package com.masterMindGame.gameGenerators;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 class GameLauncherUtils {
+
+    public static class Reminder {
+        Timer timer;
+
+        public Reminder(int seconds) {
+            timer = new Timer();
+            timer.schedule(new RemindTask(), seconds*1000);
+        }
+
+        class RemindTask extends TimerTask {
+            public void run() {
+                System.out.println("Time's up! Game's over. Exit game now...");
+                // Terminate the timer thread
+                timer.cancel();
+                System.exit(0);
+            }
+        }
+    }
 
     char[] intArrayToCharArray(int[] intArray) {
         // Convert target int array to char array format
@@ -23,19 +43,12 @@ class GameLauncherUtils {
         return map;
     }
 
-    boolean isSecrectCodeEntered(String input, char[] targetCharArray){
+    boolean isSecrectCodeEntered(String input){
         // If user enters the secret code, switch the god mode on and win the game directly
         if (input.equals("iamgod")) {
             return true;
         }
         return false;
-    }
-
-    void printInstruction(int totalNum, int min, int max, int lives) {
-        System.out.println("Instruction: ");
-        System.out.println("Enter " +  totalNum + " numbers from " + min +" to " + max + " , try to guess " +
-                "the correct combination within " + lives + " attempts.");
-        System.out.println("Note: duplicate numbers are also applied.");
     }
 
     char[] initialCurCorrectArray(char[] target, char[] curCorrect) {
@@ -102,6 +115,29 @@ class GameLauncherUtils {
             }
         }
         return true;
+    }
+
+    double countScore(char[] curCorrect, int totalNum) {
+        double rightGuess = 0;
+        for (char c : curCorrect) {
+            if (c != '.') {
+                rightGuess += 1;
+            }
+        }
+        return rightGuess / (double)totalNum * 100;
+    }
+
+
+    char[] getHint(char[] curCorrect, char[] targetCharArray) {
+        // Find the first incorrect input from curCorrect char[].
+        for (int i = 0; i < curCorrect.length; i++) {
+            if (curCorrect[i] == '.') {
+                // Give the user back the curCorrect array with one free answer given.
+                curCorrect[i] = targetCharArray[i];
+                return curCorrect;
+            }
+        }
+        return curCorrect;
     }
 
 }

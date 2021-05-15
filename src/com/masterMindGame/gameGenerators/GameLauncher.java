@@ -20,9 +20,13 @@ public class GameLauncher {
     private static int min;
     private static int max;
     private static int lives;
+    private static int timeLimit;
+    private static List<String> instruction;
+    private static int hintLimit;
     private static char[] targetCharArray;
     private static Map<Character, Integer> targetNumsMap = new HashMap<>();
     static GameLauncherUtils utils = new GameLauncherUtils();
+    private static double score = 0;
 
     /**
    * We have 3 steps to finish the whole processing.
@@ -52,6 +56,9 @@ public class GameLauncher {
                 min = easyMode.getMin();
                 max = easyMode.getMax();
                 lives = easyMode.getLives();
+                timeLimit = easyMode.getTimeLimit();
+                instruction = easyMode.getInstruction();
+                hintLimit = easyMode.getHintLimit();
                 break;
             } else if (level.equals("medium")) {
                 MediumGame mediumMode = new MediumGame();
@@ -59,6 +66,9 @@ public class GameLauncher {
                 min = mediumMode.getMin();
                 max = mediumMode.getMax();
                 lives = mediumMode.getLives();
+                timeLimit = mediumMode.getTimeLimit();
+                instruction = mediumMode.getInstruction();
+                hintLimit = mediumMode.getHintLimit();
                 break;
             } else if (level.equals("hard")) {
                 HardGame hardMode = new HardGame();
@@ -66,6 +76,9 @@ public class GameLauncher {
                 min = hardMode.getMin();
                 max = hardMode.getMax();
                 lives = hardMode.getLives();
+                timeLimit = hardMode.getTimeLimit();
+                instruction = hardMode.getInstruction();
+                hintLimit = hardMode.getHintLimit();
                 break;
             }
             System.out.println("Invalid input! Please only enter easy, medium, or hard.");
@@ -85,8 +98,13 @@ public class GameLauncher {
         targetCharArray = utils.intArrayToCharArray(targetNumsArray);
         // Put all elements in targetCharArray to a hashmap
         targetNumsMap = utils.buildTargetMap(targetCharArray);
+
         // Print instruction based on the level user chosen
-        utils.printInstruction(totalNum, min, max, lives);
+        // utils.printInstruction(totalNum, min, max, lives, timeLimit);
+
+        for (String s : instruction) {
+            System.out.println(s);
+        }
     }
 
     /**
@@ -104,17 +122,21 @@ public class GameLauncher {
 
         while (lives > 0) {
             System.out.println("Attempts Left: " + lives);
+            System.out.println("Hint Available: " + hintLimit);
             System.out.println();
             boolean validLengthInput = false;
             boolean isGameFinished = true;
             while (!validLengthInput) {
                 // Prompt user to input their guess
                 System.out.println("Enter your guess here: ");
+                long startTime = System.currentTimeMillis();
+
+                new GameLauncherUtils.Reminder(timeLimit);
                 Scanner sc = new Scanner(System.in);
                 String input = sc.nextLine();
 
                 // If the user types in the secret code, indicate the answer and exit the program
-                if (utils.isSecrectCodeEntered(input, targetCharArray)) {
+                if (utils.isSecrectCodeEntered(input)) {
                     String answer = new String(targetCharArray);
                     System.out.println("Congratulations! The answer is: " + answer);
                     break;
@@ -138,6 +160,9 @@ public class GameLauncher {
                     // Check the numbers of correct numbers and correct index guessed for current input
                     int[] correctResult = utils.checkValidInput(totalNum, targetCharArray, targetNumsMap, input,
                             correctNum, correctIndex, curCorrect, curGuess);
+                    // Count current highest score
+                    double curScore = utils.countScore(curCorrect, totalNum);
+                    score = Math.max(score, curScore);
                     // Show current guess results
                     utils.printCurRecords(correctResult, totalNum);
                     // Show all number combinations guessed so far
@@ -149,20 +174,41 @@ public class GameLauncher {
                     if (!isGameFinished && lives == 0) {
                         System.out.println("Wrong guess!");
                         System.out.println("You lost! The word was: " + new String(targetCharArray));
+                        System.out.println("Your highest score: " + score + " / 100.00");
                         break;
                     } else if (!isGameFinished) {
                         System.out.println("Wrong guess! Try again!");
-                    }
+                        long endTime = System.currentTimeMillis();
+                        long timeElapsed = (endTime - startTime) / 1000;
+                        long timeLeft = timeLimit - timeElapsed;
+                        timeLimit -= timeElapsed;
+                        System.out.println("You still have " + timeLeft + " seconds left.");
+                        if (hintLimit > 0) {
+                            System.out.println("Do you want a hint? (y/n)");
+                            String ifGetHint = sc.nextLine();
+                            askHint(ifGetHint, curCorrect);
+                        }
 
+                    }
                 } else {
                     System.out.println("Please enter " + totalNum + " numbers. Try Again.");
                 }
             }
             if (isGameFinished) {
                 System.out.println("You won!");
+                System.out.println("Your highest score: " + score + " / 100.00");
                 break;
             }
         }
         System.exit(0);
+    }
+
+    private static void askHint(String input, char[] curCorrect) {
+        if (input.equals("y")) {
+            hintLimit--;
+            curCorrect = utils.getHint(curCorrect, targetCharArray);
+            String newCurGuess = new String(curCorrect);
+            System.out.println("New current guess: " + newCurGuess);
+        }
     }
 }

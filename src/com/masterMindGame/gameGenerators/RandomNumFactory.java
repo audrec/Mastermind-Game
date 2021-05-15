@@ -7,11 +7,10 @@ import com.masterMindGame.gameGenerators.HTTPRequestNumGenerator;
 public class RandomNumFactory {
 
     int[] generateRandomNum(int totalNum, int min, int max) {
-        int number = 0;
 
         try {
             HTTPRequestNumGenerator rn = new HTTPRequestNumGenerator("cbf7ac13-539b-4d29-893f-7b16220e8035");
-            rn.generate(totalNum, min, max, true, "method");
+            rn.generate(totalNum, min, max, true, "getRandomNums");
 
             // Get random numbers in integer array format.
             int[] numArray = rn.getElementAsArray();
